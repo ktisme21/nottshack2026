@@ -15,3 +15,12 @@ Before making any changes:
 After making changes:
 - add commit message
 - git push to name-part
+
+
+merging with main branch
+- git checkout current branch
+- add commit message and push
+- git checkout main
+- git pull origin mian
+- git merge (branch u want merge)
+- git push
