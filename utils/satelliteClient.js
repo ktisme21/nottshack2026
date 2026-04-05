@@ -8,7 +8,7 @@ export async function fetchSatelliteData(lat, lng) {
       `https://data-api.globalforestwatch.org/dataset/gfw_integrated_alerts/latest/query`,
       {
         params: { lat, lon: lng, radius: 10 },
-        headers: { "x-api-key": process.env.GFW_API_KEY },
+        headers: { "x-api-key": process.env.NASA_API_KEY },
       }
     );
     const raw = response.data;
