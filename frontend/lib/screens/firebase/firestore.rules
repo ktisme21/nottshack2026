@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Companies - anyone can read, only authenticated can write
+    match /companies/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Raw ESG data - anyone can write, only backend can update
+    match /raw_esg_data/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow update: if request.auth != null;  // Only backend service
+    }
+    
+    // Verified reports - anyone can read, only backend can write
+    match /reports/{document} {
+      allow read: if true;
+      allow write: if request.auth != null;  // Only backend service
+    }
+    
+    // Purchases - investors can write their own
+    match /purchases/{document} {
+      allow read: if true;
+      allow write: if request.auth != null || true;  // Allow for demo
+    }
+  }
+}

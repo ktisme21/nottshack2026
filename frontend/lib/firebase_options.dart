@@ -41,48 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDalTsxtzQGSqmcI7eBMih8k6ABBJ43ixc',
-    appId: '1:138614339331:web:21e240edafd2c0f06e5b36',
-    messagingSenderId: '138614339331',
-    projectId: 'paws-fac7e',
-    authDomain: 'paws-fac7e.firebaseapp.com',
-    storageBucket: 'paws-fac7e.firebasestorage.app',
-    measurementId: 'G-GDR0FB6MFK',
+    apiKey: 'AIzaSyChGspQXSAf7oOH-qFglHOAG_gxXr3KiL8',
+    appId: '1:347981346637:web:28a1a152c2c81947dba904',
+    messagingSenderId: '347981346637',
+    projectId: 'esg-supply-chain',
+    authDomain: 'esg-supply-chain.firebaseapp.com',
+    storageBucket: 'esg-supply-chain.firebasestorage.app',
+    measurementId: 'G-KR7EBMD6Y0',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBoXX7Sqq0U1EQDzGDgPW6ZAA6ZZNIb_SU',
-    appId: '1:138614339331:android:cef300615c8932186e5b36',
-    messagingSenderId: '138614339331',
-    projectId: 'paws-fac7e',
-    storageBucket: 'paws-fac7e.firebasestorage.app',
+    apiKey: 'AIzaSyAzqLZ7UjsbtVTwf7_Qi8t3TAe7k-gNGAA',
+    appId: '1:347981346637:android:fdc860ee9d5bbeabdba904',
+    messagingSenderId: '347981346637',
+    projectId: 'esg-supply-chain',
+    storageBucket: 'esg-supply-chain.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAzUwNujeK60nKAg-QOFbnHPjB3R6Kn-oo',
-    appId: '1:138614339331:ios:a30c56898809c7fb6e5b36',
-    messagingSenderId: '138614339331',
-    projectId: 'paws-fac7e',
-    storageBucket: 'paws-fac7e.firebasestorage.app',
+    apiKey: 'AIzaSyAxin15KLSonBKq_YysP8vOONyAeOkM_ko',
+    appId: '1:347981346637:ios:b2b17ecd5cc65afbdba904',
+    messagingSenderId: '347981346637',
+    projectId: 'esg-supply-chain',
+    storageBucket: 'esg-supply-chain.firebasestorage.app',
     iosBundleId: 'com.example.pawtrustFresh',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAzUwNujeK60nKAg-QOFbnHPjB3R6Kn-oo',
-    appId: '1:138614339331:ios:a30c56898809c7fb6e5b36',
-    messagingSenderId: '138614339331',
-    projectId: 'paws-fac7e',
-    storageBucket: 'paws-fac7e.firebasestorage.app',
+    apiKey: 'AIzaSyAxin15KLSonBKq_YysP8vOONyAeOkM_ko',
+    appId: '1:347981346637:ios:b2b17ecd5cc65afbdba904',
+    messagingSenderId: '347981346637',
+    projectId: 'esg-supply-chain',
+    storageBucket: 'esg-supply-chain.firebasestorage.app',
     iosBundleId: 'com.example.pawtrustFresh',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDalTsxtzQGSqmcI7eBMih8k6ABBJ43ixc',
-    appId: '1:138614339331:web:bbd5cc9c87f79ab16e5b36',
-    messagingSenderId: '138614339331',
-    projectId: 'paws-fac7e',
-    authDomain: 'paws-fac7e.firebaseapp.com',
-    storageBucket: 'paws-fac7e.firebasestorage.app',
-    measurementId: 'G-2TYS45MH0Z',
+    apiKey: 'AIzaSyChGspQXSAf7oOH-qFglHOAG_gxXr3KiL8',
+    appId: '1:347981346637:web:e3edd91cdb4af9c1dba904',
+    messagingSenderId: '347981346637',
+    projectId: 'esg-supply-chain',
+    authDomain: 'esg-supply-chain.firebaseapp.com',
+    storageBucket: 'esg-supply-chain.firebasestorage.app',
+    measurementId: 'G-S92R05V6LN',
   );
+
 }

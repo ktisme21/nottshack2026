@@ -8,12 +8,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:pawtrust_fresh/main.dart';
+import 'package:esg_supply_chain/main.dart';
 
 void main() {
   testWidgets('App builds without error', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(PawTrustApp());
+    await tester.pumpWidget(ESGSupplyChainApp());
 
     // Verify that the app builds and shows something
     expect(find.byType(MaterialApp), findsOneWidget);
