@@ -1,12 +1,12 @@
-import { fetchSatelliteData } from "../utils/satelliteClient.js";
+import { fetchSatelliteData as getSatelliteData } from "../utils/satelliteClient.js";
 import { calculateDeforestationCO2 } from "../utils/co2Calculator.js";
 import { processWithDCAI } from "../utils/dcai.js";
 import { storeOnChain } from "../utils/hardhat.js";
 
-export const fetchSatelliteDataController = async (req, res) => {
+export const fetchSatelliteData = async (req, res) => {
   try {
     const { companyId, lat, lng } = req.body;
-    const satelliteRaw = await fetchSatelliteData(lat, lng);
+    const satelliteRaw = await getSatelliteData(lat, lng);
     const co2Kg = await calculateDeforestationCO2(satelliteRaw.areaLostHa);
     const dcaiResult = await processWithDCAI("satellite", satelliteRaw, co2Kg);
     const chainResult = await storeOnChain("satellite", dcaiResult.improvedData, co2Kg, companyId);
