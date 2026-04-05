@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../services/firestore_service.dart';
-import '../widgets/blockchain_badge.dart';
+import '../services/firestore_service.dart';import '../services/api_service.dart';import '../widgets/blockchain_badge.dart';
 
 // ─── Shared design tokens (import from role_select or redefine here) ──────────
 class _T {
@@ -79,26 +78,42 @@ class _CompanyDashboardState extends State<CompanyDashboard>
       final companyName = _companies
           .firstWhere((c) => c['id'] == _selectedCompanyId)['name']!;
 
+      // Prepare ESG data
+      final supplierData = {
+        'name': _supplierNameController.text,
+        'emissionReduction': double.tryParse(_supplierEmissionsController.text) ?? 0,
+        'certifications': _supplierCertController.text,
+      };
+      final manufacturerData = {
+        'emissions': double.tryParse(_mfrEmissionsController.text) ?? 0,
+        'energyUsage': double.tryParse(_mfrEnergyController.text) ?? 0,
+        'renewableEnergy': double.tryParse(_mfrRenewableController.text) ?? 0,
+      };
+      final logisticsData = {
+        'fuelUsage': double.tryParse(_logFuelController.text) ?? 0,
+        'distance': double.tryParse(_logDistanceController.text) ?? 0,
+        'transportEmissions':
+            (double.tryParse(_logFuelController.text) ?? 0) * 2.3,
+      };
+
+      // Submit to blockchain API
+      final blockchainResponse = await ApiService.submitToBlockchain(
+        companyId: _selectedCompanyId,
+        companyName: companyName,
+        period: _periodController.text,
+        supplierData: supplierData,
+        manufacturerData: manufacturerData,
+        logisticsData: logisticsData,
+      );
+
+      // Also save to Firestore for backup
       final reportId = await _firestore.submitESGReport(
         companyId: _selectedCompanyId,
         companyName: companyName,
         period: _periodController.text,
-        supplierData: {
-          'name': _supplierNameController.text,
-          'emissionReduction': double.tryParse(_supplierEmissionsController.text) ?? 0,
-          'certifications': _supplierCertController.text,
-        },
-        manufacturerData: {
-          'emissions': double.tryParse(_mfrEmissionsController.text) ?? 0,
-          'energyUsage': double.tryParse(_mfrEnergyController.text) ?? 0,
-          'renewableEnergy': double.tryParse(_mfrRenewableController.text) ?? 0,
-        },
-        logisticsData: {
-          'fuelUsage': double.tryParse(_logFuelController.text) ?? 0,
-          'distance': double.tryParse(_logDistanceController.text) ?? 0,
-          'transportEmissions':
-              (double.tryParse(_logFuelController.text) ?? 0) * 2.3,
-        },
+        supplierData: supplierData,
+        manufacturerData: manufacturerData,
+        logisticsData: logisticsData,
       );
 
       setState(() { _submittedReportId = reportId; _isSubmitting = false; });
