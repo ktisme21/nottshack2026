@@ -6,15 +6,24 @@ export const submitCompanyClaim = async (req, res) => {
   try {
     const {
       companyId,
-      supplierName,
-      carbonSequestration,
-      certifications,
-      co2EmissionsKg,
-      energyUsageKwh,
-      renewableEnergyPercent,
-      fuelUsageLitres,
-      distanceKm,
+      companyName,
+      period,
+      supplierData,
+      manufacturerData,
+      logisticsData,
     } = req.body;
+
+    // Match Flutter frontend field names exactly
+    const supplierName        = supplierData?.name;
+    const carbonSequestration = supplierData?.emissionReduction || 0;
+    const certifications      = supplierData?.certifications;
+
+    const co2EmissionsKg        = manufacturerData?.emissions || 0;
+    const energyUsageKwh        = manufacturerData?.energyUsage || 0;
+    const renewableEnergyPercent = manufacturerData?.renewableEnergy || 0;
+
+    const fuelUsageLitres = logisticsData?.fuelUsage || 0;
+    const distanceKm      = logisticsData?.distance || 0;
 
     // Step 1: Calculate energy CO2 via Climatiq
     const energyCO2 = await calculateEnergyCO2(energyUsageKwh, "coal");
@@ -22,11 +31,17 @@ export const submitCompanyClaim = async (req, res) => {
     // Step 2: Calculate logistics CO2 via Carbon Interface
     const logisticsCO2 = await calculateLogisticsCO2(fuelUsageLitres, distanceKm, "truck");
 
-    // Step 3: Total claimed CO2 (company submitted + our calculation)
-    const totalCO2Kg = (co2EmissionsKg || 0) + energyCO2 + logisticsCO2 - (carbonSequestration || 0);
+    // Step 3: Total CO2
+    const totalCO2Kg =
+      co2EmissionsKg +
+      energyCO2 +
+      logisticsCO2 -
+      carbonSequestration;
 
     const claimData = {
       companyId,
+      companyName,
+      period,
       supplierName,
       carbonSequestration,
       certifications,
@@ -41,7 +56,7 @@ export const submitCompanyClaim = async (req, res) => {
       submittedAt: new Date().toISOString(),
     };
 
-    // Step 4: DCAI processes and validates company claim
+    // Step 4: DCAI processes and validates
     const dcaiResult = await processWithDCAI("company_claim", claimData, totalCO2Kg);
 
     // Step 5: Store on blockchain
@@ -55,6 +70,8 @@ export const submitCompanyClaim = async (req, res) => {
     res.status(201).json({
       message: "Company ESG claim recorded on blockchain",
       companyId,
+      companyName,
+      period,
       supplierName,
       breakdown: {
         submittedCO2: co2EmissionsKg,
@@ -71,6 +88,6 @@ export const submitCompanyClaim = async (req, res) => {
       dataHash: chainResult.dataHash,
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message, details: err.response?.data });
   }
 };
