@@ -327,7 +327,7 @@ class ReportViewer extends StatelessWidget {
 
         // ── Blockchain badge ────────────────────────────────────────────────
         BlockchainBadge(
-            hash: report.blockchainHash,
+            hash: _txHash ?? report.blockchainHash,
             timestamp: report.createdAt),
 
         const SizedBox(height: 20),
