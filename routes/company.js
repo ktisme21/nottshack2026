@@ -1,5 +1,5 @@
-const express = require("express");
+import express from "express";
+import { submitCompanyClaim } from "../controllers/companyController.js";
 const router = express.Router();
-const { submitCompanyClaim } = require("../controllers/companyController");
 router.post("/", submitCompanyClaim);
-module.exports = router;
+export default router;

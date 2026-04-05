@@ -1,15 +1,21 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/satellite", require("./routes/satellite"));
-app.use("/api/company", require("./routes/company"));
-app.use("/api/verify", require("./routes/verify"));
-app.use("/api/report", require("./routes/report"));
+import satelliteRoute from "./routes/satellite.js";
+import companyRoute from "./routes/company.js";
+import verifyRoute from "./routes/verify.js";
+import reportRoute from "./routes/report.js";
+
+app.use("/api/satellite", satelliteRoute);
+app.use("/api/company", companyRoute);
+app.use("/api/verify", verifyRoute);
+app.use("/api/report", reportRoute);
 
 app.get("/", (req, res) => res.json({ status: "ESG Backend running" }));
 

@@ -1,5 +1,5 @@
-const express = require("express");
+import express from "express";
+import { verifyESG } from "../controllers/verifyController.js";
 const router = express.Router();
-const { verifyESG } = require("../controllers/verifyController");
 router.post("/", verifyESG);
-module.exports = router;
+export default router;

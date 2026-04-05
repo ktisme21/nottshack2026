@@ -1,5 +1,5 @@
-const express = require("express");
+import express from "express";
+import { fetchSatelliteData } from "../controllers/satelliteController.js";
 const router = express.Router();
-const { fetchSatelliteData } = require("../controllers/satelliteController");
 router.post("/", fetchSatelliteData);
-module.exports = router;
+export default router;

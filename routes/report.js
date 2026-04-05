@@ -1,5 +1,5 @@
-const express = require("express");
+import express from "express";
+import { getReport } from "../controllers/reportController.js";
 const router = express.Router();
-const { getReport } = require("../controllers/reportController");
 router.get("/:companyId", getReport);
-module.exports = router;
+export default router;
