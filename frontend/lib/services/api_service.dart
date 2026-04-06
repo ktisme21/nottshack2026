@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  static const String _baseUrl    = 'http://10.163.15.125:3000';
+  static const String _baseUrl    = 'http://10.163.4.70:3000';
   static const String _apiKey     = 'esg-hackathon-2026';
 
   static const String blockchainApiUrl = '$_baseUrl/api/company';
@@ -103,22 +103,15 @@ class ApiService {
   }
 
   /// Get full ESG report for a company
-  static Future<Map<String, dynamic>> getReport({
-    required String companyId,
-  }) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$reportApiUrl/$companyId'),
-        headers: _headers,
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Report API error: ${response.statusCode} - ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Failed to get report: $e');
+  static Future<Map<String, dynamic>> getReport(String companyId) async {
+    final response = await http.get(
+      Uri.parse('$reportApiUrl/$companyId'),
+      headers: _headers,
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load report: ${response.body}');
     }
   }
 }

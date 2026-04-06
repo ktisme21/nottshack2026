@@ -53,8 +53,11 @@ class _CompanyDashboardState extends State<CompanyDashboard>
   final _mfrRenewableController       = TextEditingController();
   final _logFuelController            = TextEditingController();
   final _logDistanceController        = TextEditingController();
+  final _logWeightController          = TextEditingController();
 
   String? _submittedReportId;
+  String? _txHash;
+  String? _dataHash;
 
   late AnimationController _fadeCtrl;
   late Animation<double>   _fadeAnim;
@@ -93,7 +96,7 @@ class _CompanyDashboardState extends State<CompanyDashboard>
         'fuelUsage': double.tryParse(_logFuelController.text) ?? 0,
         'distance': double.tryParse(_logDistanceController.text) ?? 0,
         'transportEmissions':
-            (double.tryParse(_logFuelController.text) ?? 0) * 2.3,
+            (double.tryParse(_logWeightController.text) ?? 0) * 2.3,
       };
 
       // Submit to blockchain API
@@ -106,6 +109,10 @@ class _CompanyDashboardState extends State<CompanyDashboard>
         logisticsData: logisticsData,
       );
 
+      // ← ADD THESE 2 LINES RIGHT HERE
+      print('Blockchain txHash: ${blockchainResponse['txHash']}');
+      print('Blockchain dataHash: ${blockchainResponse['dataHash']}');
+
       // Also save to Firestore for backup
       final reportId = await _firestore.submitESGReport(
         companyId: _selectedCompanyId,
@@ -114,15 +121,27 @@ class _CompanyDashboardState extends State<CompanyDashboard>
         supplierData: supplierData,
         manufacturerData: manufacturerData,
         logisticsData: logisticsData,
+        txHash: blockchainResponse['txHash'],
+        dataHash: blockchainResponse['dataHash'],
+        totalCO2: blockchainResponse['totalCO2'],
+
       );
 
+      print('Firestore report ID: $reportId');
+
       setState(() { _submittedReportId = reportId; _isSubmitting = false; });
+      setState(() { 
+        _submittedReportId = reportId; 
+        _txHash = blockchainResponse['txHash'];
+        _dataHash = blockchainResponse['dataHash'];
+        _isSubmitting = false; 
+      });
       _snack('Report committed to blockchain · ID: ${reportId.substring(0, 16)}…', ok: true);
 
       [_supplierNameController, _supplierEmissionsController,
        _supplierCertController, _mfrEmissionsController,
        _mfrEnergyController, _mfrRenewableController,
-       _logFuelController, _logDistanceController]
+       _logFuelController, _logDistanceController, _logWeightController]
           .forEach((c) => c.clear());
     } catch (e) {
       setState(() => _isSubmitting = false);
@@ -209,6 +228,9 @@ class _CompanyDashboardState extends State<CompanyDashboard>
                           _buildField(_logDistanceController,
                               'Distance (km)',
                               Icons.route_rounded, isNumber: true),
+                          _buildField(_logWeightController,
+                              'Transport Emissions (kg CO₂)',
+                              Icons.co2_rounded, isNumber: true),
                         ],
                       ),
                       const SizedBox(height: 28),
@@ -488,7 +510,8 @@ class _CompanyDashboardState extends State<CompanyDashboard>
         const SizedBox(height: 10),
         _codeRow('REPORT_ID', _submittedReportId!),
         _codeRow('STATUS', 'PENDING_DCAI_PROCESSING'),
-        _codeRow('NETWORK', 'POLYGON_MAINNET'),
+        _codeRow('TX_HASH', _txHash ?? 'pending'),
+        _codeRow('NETWORK', 'HARDHAT_LOCAL'),
         const SizedBox(height: 10),
         Text('Python backend will clean data → calculate ESG score → store hash on Polygon → update Firestore',
           style: GoogleFonts.sourceCodePro(

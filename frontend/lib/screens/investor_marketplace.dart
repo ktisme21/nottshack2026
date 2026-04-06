@@ -177,7 +177,7 @@ class _InvestorMarketplaceState extends State<InvestorMarketplace>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ));
       Navigator.push(context, MaterialPageRoute(
-          builder: (_) => ReportViewer(reportId: report.id)));
+          builder: (_) => ReportViewer(reportId: report.id, companyId: report.companyId)));
     }
   }
 

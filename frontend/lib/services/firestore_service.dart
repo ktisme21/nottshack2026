@@ -148,6 +148,9 @@ class FirestoreService {
     required Map<String, dynamic> supplierData,
     required Map<String, dynamic> manufacturerData,
     required Map<String, dynamic> logisticsData,
+    String? txHash,
+    String? dataHash,
+    double? totalCO2,
   }) async {
     // Calculate ESG score from supplier, manufacturer, and logistics data
     int esgScore = _calculateESGScore(supplierData, manufacturerData, logisticsData);
@@ -172,7 +175,9 @@ class FirestoreService {
       'esgScore': esgScore,
       'totalEmissions': totalEmissions,
       'price': 5.00,
-      'blockchainHash': 'hash_${DateTime.now().millisecondsSinceEpoch}', // Placeholder
+      'blockchainHash': txHash ?? 'pending', 
+      'dataHash': dataHash ?? '', 
+      'isVerified': txHash != null, 
       'isVerified': true,
       'status': 'verified', // Immediately visible to investors
       'breakdown': breakdown,
