@@ -177,8 +177,7 @@ class FirestoreService {
       'price': 5.00,
       'blockchainHash': txHash ?? 'pending', 
       'dataHash': dataHash ?? '', 
-      'isVerified': txHash != null, 
-      'isVerified': true,
+      'isVerified': txHash != null,
       'status': 'verified', // Immediately visible to investors
       'breakdown': breakdown,
       'createdAt': FieldValue.serverTimestamp(),

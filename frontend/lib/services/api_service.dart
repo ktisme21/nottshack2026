@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService {
-  static const String _baseUrl    = 'http://10.163.4.70:3000';
+  static const String _baseUrl    = 'http://10.163.13.213:3000';
   static const String _apiKey     = 'esg-hackathon-2026';
 
   static const String blockchainApiUrl = '$_baseUrl/api/company';

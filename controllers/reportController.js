@@ -20,17 +20,17 @@ export const getReport = async (req, res) => {
           verified: false,
         },
         blockchain: {
-          satelliteTxHash: null,
-          companyTxHash: null,
-          totalRecords: 0,
+            satelliteTxHash: satelliteRecord?.txHash || null,  // ← txHash isn't stored in the record
+            companyTxHash: companyRecord?.txHash || null,
+            totalRecords: records.length,
         },
         records: [],
         message: "No blockchain records found for this company yet.",
       });
     }
 
-    const satelliteRecord = records.find((r) => r.actor === "satellite");
-    const companyRecord   = records.find((r) => r.actor === "company_claim");
+    const satelliteRecord = records.filter((r) => r.actor === "satellite").at(-1);
+    const companyRecord   = records.filter((r) => r.actor === "company_claim").at(-1);
 
     let grade;
     if (!satelliteRecord || !companyRecord) {
