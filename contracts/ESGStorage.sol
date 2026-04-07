@@ -14,6 +14,7 @@ contract ESGStorage {
     struct Stakeholder {
         string stakeholderId;
         string role;
+        address walletAddress;
         bool active;
         uint256 authorizedAt;
     }
@@ -23,6 +24,7 @@ contract ESGStorage {
         string companyId;
         string stakeholderId;
         string stakeholderRole;
+        address submitterWallet;
         string actor;
         string period;
         string dataHash;
@@ -44,6 +46,7 @@ contract ESGStorage {
     mapping(string => Company) private companies;
     mapping(string => bytes32[]) private companyStakeholderKeys;
     mapping(string => mapping(bytes32 => Stakeholder)) private stakeholders;
+    mapping(string => mapping(address => bytes32)) private stakeholderWalletKeys;
     mapping(string => uint256[]) private companySubmissionIds;
     mapping(uint256 => Submission) private submissions;
     mapping(uint256 => mapping(bytes32 => bool)) private reportPurchases;
@@ -57,6 +60,7 @@ contract ESGStorage {
     event StakeholderAuthorized(
         string indexed companyId,
         string indexed stakeholderId,
+        address indexed walletAddress,
         string role,
         uint256 timestamp
     );
@@ -132,24 +136,31 @@ contract ESGStorage {
     function authorizeStakeholder(
         string memory companyId,
         string memory stakeholderId,
-        string memory role
+        string memory role,
+        address walletAddress
     ) public onlyOwner companyExists(companyId) {
         require(bytes(stakeholderId).length > 0, "Stakeholder ID required");
         require(bytes(role).length > 0, "Role required");
+        require(walletAddress != address(0), "Wallet address required");
 
         bytes32 stakeholderKey = _stakeholderKey(stakeholderId);
         Stakeholder storage stakeholder = stakeholders[companyId][stakeholderKey];
 
         if (bytes(stakeholder.stakeholderId).length == 0) {
             companyStakeholderKeys[companyId].push(stakeholderKey);
+        } else if (stakeholder.walletAddress != walletAddress) {
+            stakeholderWalletKeys[companyId][stakeholder.walletAddress] = bytes32(0);
         }
 
         stakeholder.stakeholderId = stakeholderId;
         stakeholder.role = role;
+        stakeholder.walletAddress = walletAddress;
         stakeholder.active = true;
         stakeholder.authorizedAt = block.timestamp;
 
-        emit StakeholderAuthorized(companyId, stakeholderId, role, block.timestamp);
+        stakeholderWalletKeys[companyId][walletAddress] = stakeholderKey;
+
+        emit StakeholderAuthorized(companyId, stakeholderId, walletAddress, role, block.timestamp);
     }
 
     function revokeStakeholder(
@@ -162,6 +173,7 @@ contract ESGStorage {
         require(bytes(stakeholder.stakeholderId).length > 0, "Stakeholder not found");
         require(stakeholder.active, "Stakeholder already inactive");
 
+        stakeholderWalletKeys[companyId][stakeholder.walletAddress] = bytes32(0);
         stakeholder.active = false;
 
         emit StakeholderRevoked(companyId, stakeholderId, block.timestamp);
@@ -201,6 +213,7 @@ contract ESGStorage {
             companyId: companyId,
             stakeholderId: stakeholderId,
             stakeholderRole: stakeholderRole,
+            submitterWallet: stakeholder.walletAddress,
             actor: actor,
             period: period,
             dataHash: dataHash,
@@ -214,6 +227,54 @@ contract ESGStorage {
             submissionId,
             companyId,
             stakeholderId,
+            actor,
+            period,
+            dataHash,
+            co2Value,
+            block.timestamp
+        );
+
+        return submissionId;
+    }
+
+    function submitESGDataAsStakeholder(
+        string memory companyId,
+        string memory actor,
+        string memory period,
+        string memory dataHash,
+        uint256 co2Value
+    ) public companyExists(companyId) returns (uint256) {
+        require(bytes(actor).length > 0, "Actor required");
+        require(bytes(period).length > 0, "Period required");
+        require(bytes(dataHash).length > 0, "Data hash required");
+
+        bytes32 stakeholderKey = stakeholderWalletKeys[companyId][msg.sender];
+        require(stakeholderKey != bytes32(0), "Wallet not authorized");
+
+        Stakeholder storage stakeholder = stakeholders[companyId][stakeholderKey];
+        require(stakeholder.active, "Stakeholder not authorized");
+
+        uint256 submissionId = nextSubmissionId++;
+
+        submissions[submissionId] = Submission({
+            id: submissionId,
+            companyId: companyId,
+            stakeholderId: stakeholder.stakeholderId,
+            stakeholderRole: stakeholder.role,
+            submitterWallet: msg.sender,
+            actor: actor,
+            period: period,
+            dataHash: dataHash,
+            co2Value: co2Value,
+            timestamp: block.timestamp
+        });
+
+        companySubmissionIds[companyId].push(submissionId);
+
+        emit ESGDataSubmitted(
+            submissionId,
+            companyId,
+            stakeholder.stakeholderId,
             actor,
             period,
             dataHash,
@@ -281,6 +342,18 @@ contract ESGStorage {
         string memory stakeholderId
     ) public view returns (bool) {
         return stakeholders[companyId][_stakeholderKey(stakeholderId)].active;
+    }
+
+    function isWalletAuthorized(
+        string memory companyId,
+        address walletAddress
+    ) public view returns (bool) {
+        bytes32 stakeholderKey = stakeholderWalletKeys[companyId][walletAddress];
+        if (stakeholderKey == bytes32(0)) {
+            return false;
+        }
+
+        return stakeholders[companyId][stakeholderKey].active;
     }
 
     function hasReportAccess(

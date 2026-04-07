@@ -13,6 +13,7 @@ class ApiService {
   static String get satelliteApiUrl => '$_baseUrl/api/satellite';
   static String get verifyApiUrl => '$_baseUrl/api/verify';
   static String get reportApiUrl => '$_baseUrl/api/report';
+  static String get walletPreparationApiUrl => '$_baseUrl/api/company/prepare-wallet-submission';
 
   // Shared headers for all requests
   static Map<String, String> get _headers => {
@@ -51,6 +52,41 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Failed to submit to blockchain: $e');
+    }
+  }
+
+  static Future<Map<String, dynamic>> prepareWalletSubmission({
+    required String companyId,
+    required String companyName,
+    required String period,
+    required String stakeholderWallet,
+    required Map<String, dynamic> supplierData,
+    required Map<String, dynamic> manufacturerData,
+    required Map<String, dynamic> logisticsData,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(walletPreparationApiUrl),
+        headers: _headers,
+        body: jsonEncode({
+          'companyId': companyId,
+          'companyName': companyName,
+          'period': period,
+          'stakeholderWallet': stakeholderWallet,
+          'supplierData': supplierData,
+          'manufacturerData': manufacturerData,
+          'logisticsData': logisticsData,
+          'timestamp': DateTime.now().toIso8601String(),
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Wallet preparation API error: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to prepare wallet submission: $e');
     }
   }
 
