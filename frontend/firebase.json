@@ -1,0 +1,43 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "esg-supply-chain",
+          "appId": "1:347981346637:android:fdc860ee9d5bbeabdba904",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "esg-supply-chain",
+          "configurations": {
+            "android": "1:347981346637:android:fdc860ee9d5bbeabdba904",
+            "ios": "1:347981346637:ios:b2b17ecd5cc65afbdba904",
+            "macos": "1:347981346637:ios:b2b17ecd5cc65afbdba904",
+            "web": "1:347981346637:web:28a1a152c2c81947dba904",
+            "windows": "1:347981346637:web:e3edd91cdb4af9c1dba904"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

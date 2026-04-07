@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "347981346637",
+    "project_id": "esg-supply-chain",
+    "storage_bucket": "esg-supply-chain.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347981346637:android:fdc860ee9d5bbeabdba904",
+        "android_client_info": {
+          "package_name": "com.example.pawtrust_fresh"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzqLZ7UjsbtVTwf7_Qi8t3TAe7k-gNGAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
