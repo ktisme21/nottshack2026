@@ -60,12 +60,16 @@ export const submitCompanyClaim = async (req, res) => {
     const dcaiResult = await processWithDCAI("company_claim", claimData, totalCO2Kg);
 
     // Step 5: Store on blockchain
-    const chainResult = await storeOnChain(
-      "company_claim",
-      dcaiResult.improvedData,
-      totalCO2Kg,
-      companyId
-    );
+    const chainResult = await storeOnChain({
+      actor: "company_claim",
+      companyId,
+      companyMetadata: { companyName },
+      stakeholderId: `${companyId}-company-portal`,
+      stakeholderRole: "company",
+      period,
+      data: dcaiResult.improvedData,
+      co2Kg: totalCO2Kg,
+    });
 
     res.status(201).json({
       message: "Company ESG claim recorded on blockchain",
@@ -84,6 +88,7 @@ export const submitCompanyClaim = async (req, res) => {
       renewableEnergyPercent,
       esgScore: dcaiResult.esgScore,
       flags: dcaiResult.flags,
+      submissionId: chainResult.submissionId,
       txHash: chainResult.txHash,
       dataHash: chainResult.dataHash,
     });

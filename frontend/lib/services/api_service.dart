@@ -1,14 +1,18 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ApiService {
-  static const String _baseUrl    = 'http://10.163.4.70:3000';
-  static const String _apiKey     = 'esg-hackathon-2026';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
-  static const String blockchainApiUrl = '$_baseUrl/api/company';
-  static const String satelliteApiUrl  = '$_baseUrl/api/satellite';
-  static const String verifyApiUrl     = '$_baseUrl/api/verify';
-  static const String reportApiUrl     = '$_baseUrl/api/report';
+class ApiService {
+  static const String _webBaseUrl = 'http://localhost:3000';
+  static const String _mobileBaseUrl = 'http://10.163.4.70:3000';
+  static const String _apiKey     = 'esg-hackathon-2026';
+  static String get _baseUrl => kIsWeb ? _webBaseUrl : _mobileBaseUrl;
+
+  static String get blockchainApiUrl => '$_baseUrl/api/company';
+  static String get satelliteApiUrl => '$_baseUrl/api/satellite';
+  static String get verifyApiUrl => '$_baseUrl/api/verify';
+  static String get reportApiUrl => '$_baseUrl/api/report';
 
   // Shared headers for all requests
   static Map<String, String> get _headers => {

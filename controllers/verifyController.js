@@ -17,8 +17,8 @@ export const verifyESG = async (req, res) => {
     res.json({
       companyId: companyRecord.companyId,
       verification: { result, severity, difference: difference.toFixed(2), toleranceAllowed: tolerance.toFixed(2) },
-      satellite: { co2Kg: satelliteCO2, txHash: satelliteRecord.txHash, timestamp: satelliteRecord.timestamp },
-      company: { co2Kg: companyCO2, txHash: companyRecord.txHash, timestamp: companyRecord.timestamp },
+      satellite: { submissionId: satelliteRecord.id, co2Kg: satelliteCO2, timestamp: satelliteRecord.timestamp },
+      company: { submissionId: companyRecord.id, co2Kg: companyCO2, timestamp: companyRecord.timestamp },
       publiclyVerifiable: true,
     });
   } catch (err) {
