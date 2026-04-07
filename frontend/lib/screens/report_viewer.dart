@@ -53,6 +53,8 @@ class _ReportViewerState extends State<ReportViewer> {
   @override
   void initState() {
     super.initState();
+    print('REPORT ID: ${widget.reportId}');
+    print('COMPANY ID: ${widget.companyId}');
     _fetchBlockchainReport();
   }
 
